@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             allData = results.data;
                             console.log(`Loaded ${allData.length} data records.`);
-                            const welcomeMsg = "Hello! I have monthly data on Assam floods and landslides. Ask me questions about the data (e.g., 'show severe floods in Barpeta during 2023', 'landslide risk in Dima Hasao', 'rainfall above 500mm in July'). You can type or use the microphone.";
+                            const welcomeMsg = "I have sample monthly data on Assam floods and landslides (2021-23). Ask me questions about the data (e.g., 'show severe floods in Barpeta during 2023', 'landslide risk in Dima Hasao', 'rainfall above 500mm in July'). You can type or use the microphone.";
                             addMessageToChat(welcomeMsg, 'assistant'); // Changed role for clarity
                             // Welcome message is always spoken for better UX
                             speakText(welcomeMsg);
