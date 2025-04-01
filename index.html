@@ -844,6 +844,218 @@
                 };
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile device detection
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+            
+            if (isMobile) {
+                // Add mobile class to body for CSS targeting
+                document.body.classList.add('mobile-device');
+                
+                // Mobile-specific UI adjustments
+                const appContainer = document.querySelector('.app-container');
+                const mapContainer = document.querySelector('.map-container');
+                const chatContainer = document.querySelector('.chat-container');
+                
+                // Adjust layout for mobile
+                mapContainer.style.height = '40vh';
+                chatContainer.style.height = '60vh';
+                chatContainer.style.maxWidth = '100%';
+                
+                // Make map controls more touch-friendly
+                const mapControls = document.querySelectorAll('.map-controls .btn, .map-legend');
+                mapControls.forEach(control => {
+                    control.style.padding = '12px';
+                });
+                
+                // Add swipe gesture to toggle between map and chat
+                let startY;
+                let initialMapHeight;
+                const header = document.querySelector('.app-header');
+                const headerHeight = header.offsetHeight;
+                const totalHeight = window.innerHeight - headerHeight - document.querySelector('.demo-warning').offsetHeight;
+                
+                chatContainer.addEventListener('touchstart', function(e) {
+                    startY = e.touches[0].clientY;
+                    initialMapHeight = parseInt(mapContainer.style.height, 10);
+                }, false);
+                
+                chatContainer.addEventListener('touchmove', function(e) {
+                    if (!startY) return;
+                    
+                    // Add a drag handle visual cue at the top of the chat container
+                    if (!document.querySelector('.drag-handle')) {
+                        const handle = document.createElement('div');
+                        handle.className = 'drag-handle';
+                        handle.style.width = '30px';
+                        handle.style.height = '5px';
+                        handle.style.backgroundColor = '#ccc';
+                        handle.style.borderRadius = '2.5px';
+                        handle.style.margin = '0 auto 10px auto';
+                        chatContainer.querySelector('.chat-header').prepend(handle);
+                    }
+                    
+                    const currentY = e.touches[0].clientY;
+                    const diffY = startY - currentY;
+                    
+                    // Change heights based on swipe
+                    const newMapHeight = Math.max(20, Math.min(80, initialMapHeight - (diffY / totalHeight * 100)));
+                    const newChatHeight = 100 - newMapHeight;
+                    
+                    mapContainer.style.height = `${newMapHeight}vh`;
+                    chatContainer.style.height = `${newChatHeight}vh`;
+                    
+                    // Invalidate map size when dimensions change
+                    if (window.map) {
+                        window.map.invalidateSize();
+                    }
+                }, false);
+                
+                chatContainer.addEventListener('touchend', function() {
+                    startY = null;
+                }, false);
+                
+                // Add "view on map" shortcut buttons to message responses
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList') {
+                            mutation.addedNodes.forEach(function(node) {
+                                if (node.classList && node.classList.contains('bot-message')) {
+                                    // Check if message mentions locations
+                                    if (node.textContent.includes('location') || 
+                                        node.textContent.includes('map') || 
+                                        node.textContent.includes('district')) {
+                                        
+                                        const viewMapBtn = document.createElement('button');
+                                        viewMapBtn.className = 'view-map-btn';
+                                        viewMapBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> View on Map';
+                                        viewMapBtn.style.backgroundColor = 'var(--primary-color)';
+                                        viewMapBtn.style.color = 'white';
+                                        viewMapBtn.style.border = 'none';
+                                        viewMapBtn.style.borderRadius = '15px';
+                                        viewMapBtn.style.padding = '5px 10px';
+                                        viewMapBtn.style.margin = '5px 0 0 0';
+                                        viewMapBtn.style.fontSize = '0.8rem';
+                                        viewMapBtn.style.cursor = 'pointer';
+                                        
+                                        // Add click event to focus on map
+                                        viewMapBtn.addEventListener('click', function() {
+                                            mapContainer.style.height = '70vh';
+                                            chatContainer.style.height = '30vh';
+                                            
+                                            // Scroll page to map
+                                            mapContainer.scrollIntoView({behavior: 'smooth'});
+                                            
+                                            // Invalidate map size when dimensions change
+                                            if (window.map) {
+                                                window.map.invalidateSize();
+                                            }
+                                        });
+                                        
+                                        node.appendChild(viewMapBtn);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+                
+                // Start observing chat container for new messages
+                observer.observe(document.getElementById('chatbox'), { childList: true });
+                
+                // Add mobile-friendly meta tag if not already present
+                if (!document.querySelector('meta[name="viewport"]')) {
+                    const metaTag = document.createElement('meta');
+                    metaTag.name = 'viewport';
+                    metaTag.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+                    document.head.appendChild(metaTag);
+                }
+                
+                // Add touch-friendly styles
+                const style = document.createElement('style');
+                style.textContent = `
+                    .mobile-device .input-area button {
+                        width: 46px;
+                        height: 46px;
+                    }
+                    
+                    .mobile-device #userInput {
+                        height: 46px;
+                        font-size: 16px; /* Prevents iOS zoom on focus */
+                    }
+                    
+                    .mobile-device .example-query {
+                        padding: 8px 12px;
+                        margin: 5px;
+                    }
+                    
+                    .mobile-device .chat-header {
+                        padding-top: 15px;
+                        padding-bottom: 10px;
+                    }
+                    
+                    /* Touch-friendly chat scrolling */
+                    .mobile-device #chatbox {
+                        -webkit-overflow-scrolling: touch;
+                        padding-bottom: 20px;
+                    }
+                    
+                    /* Quick actions menu */
+                    .mobile-device .quick-actions {
+                        display: flex;
+                        overflow-x: auto;
+                        padding: 10px 5px;
+                        background-color: rgba(240, 240, 240, 0.9);
+                        position: sticky;
+                        bottom: 0;
+                        white-space: nowrap;
+                        -webkit-overflow-scrolling: touch;
+                    }
+                    
+                    .mobile-device .quick-action-btn {
+                        flex: 0 0 auto;
+                        margin: 0 5px;
+                        padding: 8px 12px;
+                        background-color: white;
+                        border: 1px solid #ddd;
+                        border-radius: 20px;
+                        font-size: 0.8rem;
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Add quick action buttons above the input area
+                const quickActions = document.createElement('div');
+                quickActions.className = 'quick-actions';
+                quickActions.innerHTML = `
+                    <button class="quick-action-btn">Flood severity</button>
+                    <button class="quick-action-btn">Rain in July</button>
+                    <button class="quick-action-btn">Landslide risk</button>
+                    <button class="quick-action-btn">Affected people</button>
+                `;
+                
+                // Insert before input area
+                chatContainer.insertBefore(quickActions, document.querySelector('.input-area'));
+                
+                // Add action to quick action buttons
+                document.querySelectorAll('.quick-action-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.getElementById('userInput').value = this.textContent;
+                    });
+                });
+            }
+            
+            // Handle orientation changes on mobile
+            window.addEventListener('orientationchange', function() {
+                // Allow time for orientation to complete
+                setTimeout(function() {
+                    if (window.map) {
+                        window.map.invalidateSize();
+                    }
+                }, 200);
+            });
+        });
     </script>
 </body>
 </html>
