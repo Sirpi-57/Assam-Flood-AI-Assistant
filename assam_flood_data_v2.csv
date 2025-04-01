@@ -1,0 +1,121 @@
+RecordID,Year,Month,District,LocationName,Latitude,Longitude,MainRiver,RiverLevel,MonthlyRainfall_mm,FloodSeverity,AffectedPopulation_Est,LandslideCount_Reported,LandslideRisk,FloodRiskForecast,DataSource
+1,2023,7,Dhemaji,Gogamukh Area,27.45,94.85,Jiadhali,Danger,520,Severe,65000,0,Low,High,ASDMA Report
+2,2023,7,Lakhimpur,North Lakhimpur Town,27.23,94.10,Ronganadi,Warning,480,High,40000,0,Low,High,Govt. Report
+3,2023,8,Barpeta,Barnagar Circle,26.40,91.05,Beki,Danger,550,Severe,75000,0,Low,High,News Article
+4,2023,6,Morigaon,Mayong Area,26.25,92.15,Brahmaputra,Warning,410,Medium,25000,0,Low,Medium,Local Authority
+5,2023,7,Goalpara,Lakhipur Town,26.00,90.50,Brahmaputra,High,460,High,30000,1,Medium,High,ASDMA Report
+6,2023,8,Dhubri,Bilasipara Sub-Division,26.23,90.23,Gauranga,Danger,510,Severe,55000,0,Low,High,Govt. Report
+7,2023,9,Sivasagar,Amguri,26.98,94.63,Dikhow,Warning,390,Medium,18000,0,Low,Medium,News Article
+8,2023,7,Jorhat,Majuli Island,26.90,94.20,Brahmaputra,Danger,530,Severe,80000,0,Low,High,ASDMA Report
+9,2023,6,Dibrugarh,Moran Town,27.18,94.92,Burhidihing,Warning,440,High,35000,0,Low,High,Local Authority
+10,2023,8,Cachar,Silchar Town,24.82,92.80,Barak,Danger,580,Severe,90000,3,High,High,Govt. Report
+11,2023,7,Karimganj,Patharkandi Area,24.60,92.30,Longai,Warning,510,High,45000,2,High,High,ASDMA Report
+12,2023,9,Hailakandi,Katlicherra,24.45,92.55,Dholeswari,Warning,470,High,38000,4,High,High,News Article
+13,2023,7,Dima Hasao,Haflong Area,25.17,93.03,Diyung,Above Normal,620,Low,5000,8,High,Medium,Govt. Report
+14,2023,8,Kamrup Metropolitan,Guwahati City Edge,26.14,91.77,Bharalu,Warning,490,Medium,22000,1,Medium,Medium,ASDMA Report
+15,2022,7,Dhemaji,Sissiborgaon,27.60,94.95,Gainadi,Danger,560,Severe,70000,0,Low,High,ASDMA Report
+16,2022,8,Lakhimpur,Bihpuria Area,26.95,93.90,Dikrong,Warning,510,High,42000,0,Low,High,Govt. Report
+17,2022,6,Barpeta,Kalgachia Circle,26.30,90.95,Pohumara,Danger,590,Severe,80000,0,Low,High,News Article
+18,2022,7,Morigaon,Laharighat Area,26.35,92.30,Kopili,Warning,450,Medium,28000,0,Low,Medium,Local Authority
+19,2022,8,Goalpara,Balijana Area,25.90,90.70,Dudhnoi,High,500,High,33000,2,Medium,High,ASDMA Report
+20,2022,9,Dhubri,Golakganj Circle,26.10,89.98,Gangadhar,Danger,540,Severe,60000,0,Low,High,Govt. Report
+21,2022,7,Sivasagar,Nazira Town,26.91,94.74,Dikhow,Warning,420,Medium,20000,0,Low,Medium,News Article
+22,2022,6,Jorhat,Titabor Sub-Division,26.60,94.18,Dhansiri,Warning,470,High,30000,0,Low,High,ASDMA Report
+23,2022,8,Dibrugarh,Tingkhong Area,27.10,95.10,Dibru,High,500,High,38000,0,Low,High,Local Authority
+24,2022,7,Cachar,Lakhipur Sub-Division,24.78,93.01,Barak,Danger,610,Severe,95000,5,High,High,Govt. Report
+25,2022,8,Karimganj,Badarpur Town,24.87,92.56,Barak,Danger,550,Severe,50000,1,Medium,High,ASDMA Report
+26,2022,9,Hailakandi,Algapur Circle,24.65,92.65,Katakhal,Warning,500,High,42000,3,High,High,News Article
+27,2022,7,Dima Hasao,Mahur Area,25.25,93.15,Mahur River,Above Normal,650,Medium,8000,10,High,High,Govt. Report
+28,2022,8,Kamrup Metropolitan,Sonapur Circle,26.10,91.95,Digaru,Warning,520,Medium,25000,2,Medium,Medium,ASDMA Report
+29,2021,7,Dhemaji,Jonai Sub-Division,27.77,95.22,Siang (Brahmaputra),Danger,580,Severe,75000,0,Low,High,ASDMA Report
+30,2021,8,Lakhimpur,Dhakuakhana Area,27.15,94.43,Subansiri,Danger,530,Severe,50000,0,Low,High,Govt. Report
+31,2021,6,Barpeta,Barpeta Town,26.32,91.00,Chaulkhoa,Warning,540,High,55000,0,Low,High,News Article
+32,2021,7,Morigaon,Bhuragaon Circle,26.45,92.45,Brahmaputra,Warning,470,Medium,30000,0,Low,Medium,Local Authority
+33,2021,8,Goalpara,Dudhnoi Town,25.98,90.73,Krishnai,High,520,High,35000,3,Medium,High,ASDMA Report
+34,2021,9,Dhubri,South Salmara,25.75,89.85,Brahmaputra,Danger,560,Severe,65000,0,Low,High,Govt. Report
+35,2021,7,Sivasagar,Simaluguri Jn,26.98,94.70,Desang,Warning,440,Medium,22000,0,Low,Medium,News Article
+36,2021,6,Jorhat,Neematighat Area,26.85,94.30,Brahmaputra,Danger,510,Severe,40000,0,Low,High,ASDMA Report
+37,2021,8,Dibrugarh,Naharkatia,27.28,95.33,Burhidihing,High,530,High,42000,0,Low,High,Local Authority
+38,2021,7,Cachar,Sonai Circle,24.70,92.90,Sonai,Warning,630,High,55000,4,High,High,Govt. Report
+39,2021,8,Karimganj,Ramkrishna Nagar,24.75,92.45,Kushiara,Warning,570,High,48000,2,Medium,High,ASDMA Report
+40,2021,9,Hailakandi,Hailakandi Town,24.68,92.57,Dhaleswari,Warning,520,High,45000,3,High,High,News Article
+41,2021,7,Dima Hasao,Maibang Area,25.30,93.17,Mahur River,Above Normal,680,Medium,10000,12,High,High,Govt. Report
+42,2021,8,Kamrup Metropolitan,Chandrapur Area,26.20,91.90,Kolong,Warning,550,Medium,28000,1,Medium,Medium,ASDMA Report
+43,2023,1,Barpeta,Barpeta Road,26.50,90.97,Manas,Normal,45,None,0,0,Low,Low,IMD
+44,2023,2,Cachar,Udharbond,24.90,92.70,Madura,Normal,60,None,0,0,Low,Low,IMD
+45,2023,3,Dima Hasao,Umrangso,25.50,92.70,Kopili,Below Normal,90,None,0,1,Medium,Low,Local Authority
+46,2023,4,Lakhimpur,Ghilamara,27.35,94.55,Subansiri,Above Normal,280,Low,5000,0,Low,Medium,ASDMA Report
+47,2023,5,Goalpara,Rangjuli,26.15,90.90,Jiniram,Warning,350,Medium,15000,0,Low,Medium,News Article
+48,2022,10,Sivasagar,Gaurisagar,26.90,94.50,Dorika,Normal,150,Low,2000,0,Low,Low,Govt. Report
+49,2022,11,Jorhat,Kakajan,26.75,94.35,Bhogdoi,Normal,80,None,0,0,Low,Low,IMD
+50,2022,12,Dibrugarh,Duliajan,27.35,95.35,Tingrai,Normal,50,None,0,0,Low,Low,IMD
+51,2021,1,Morigaon,Jagiroad,26.18,92.20,Killing,Normal,35,None,0,0,Low,Low,IMD
+52,2021,2,Kamrup Metropolitan,Dispur,26.11,91.79,Basistha,Normal,55,None,0,0,Low,Low,IMD
+53,2021,3,Dhubri,Gossaigaon,26.43,90.00,Sankosh,Above Normal,110,Low,1000,0,Low,Low,Local Authority
+54,2021,4,Karimganj,Nilambazar,24.70,92.25,Singla,Above Normal,310,Low,7000,1,Medium,Medium,ASDMA Report
+55,2021,5,Hailakandi,Lala Town,24.55,92.60,Katakhal,Warning,380,Medium,18000,2,High,Medium,News Article
+56,2023,7,Nalbari,Tihu Area,26.58,91.25,Pagladiya,Danger,500,Severe,60000,0,Low,High,ASDMA Report
+57,2023,8,Baksa,Mushalpur Town,26.65,91.45,Pagaldiya,Warning,480,High,45000,0,Low,High,Govt. Report
+58,2022,6,Udalguri,Tangla Town,26.60,91.95,Noa Noi,Warning,460,High,35000,0,Low,High,News Article
+59,2022,7,Sonitpur,Tezpur Town,26.63,92.80,Brahmaputra,High,490,High,40000,0,Low,High,Local Authority
+60,2021,8,Biswanath,Gohpur Area,26.88,93.63,Brahmaputra,Danger,540,Severe,55000,0,Low,High,ASDMA Report
+61,2023,9,Chirang,Kajalgaon Town,26.53,90.65,Aie,Warning,410,Medium,25000,0,Low,Medium,Govt. Report
+62,2022,5,Bongaigaon,Abhayapuri,26.33,90.67,Manas,Warning,390,Medium,20000,0,Low,Medium,News Article
+63,2021,10,Kokrajhar,Kokrajhar Town,26.40,90.27,Gauranga,Above Normal,220,Low,8000,0,Low,Low,Local Authority
+64,2023,6,Tinsukia,Sadiya Area,27.83,95.67,Lohit,Danger,550,Severe,68000,0,Low,High,ASDMA Report
+65,2022,7,Golaghat,Dergaon,26.70,93.93,Gelabil,Warning,470,High,33000,0,Low,High,Govt. Report
+66,2021,11,Nagaon,Raha Circle,26.23,92.52,Kolong,Normal,90,None,0,0,Low,Low,News Article
+67,2023,1,Dima Hasao,Harangajao,25.05,92.85,Jatinga,Below Normal,70,None,0,1,Medium,Low,IMD
+68,2023,5,Cachar,Katigorah,24.95,92.60,Barak,Warning,400,Medium,28000,1,Medium,Medium,Local Authority
+69,2022,10,Karimganj,Ratabari,24.55,92.40,Longai,Normal,180,Low,3000,0,Medium,Low,ASDMA Report
+70,2021,4,Dhemaji,Machkhowa,27.40,94.60,Brahmaputra,Above Normal,290,Low,9000,0,Low,Medium,Govt. Report
+71,2023,7,Barpeta,Bhabanipur,26.48,90.85,Pahumara,Danger,530,Severe,72000,0,Low,High,News Article
+72,2023,8,Dima Hasao,Dittokcherra,25.10,93.10,Lubang,Above Normal,600,Low,4000,6,High,Medium,ASDMA Report
+73,2022,7,Kamrup Rural,Hajo Area,26.25,91.53,Puthimari,Warning,480,High,38000,0,Low,High,Local Authority
+74,2022,8,Nalbari,Barkhetri,26.35,91.35,Burhadia,Warning,510,High,50000,0,Low,High,Govt. Report
+75,2021,6,Sonitpur,Dhekiajuli,26.70,92.47,Gabharu,Warning,490,High,36000,0,Low,High,ASDMA Report
+76,2021,7,Golaghat,Bokakhat (Nr Kaziranga),26.60,93.60,Dhansiri,Warning,520,High,45000,0,Low,High,News Article
+77,2023,2,Hailakandi,Panchgram,24.85,92.65,Barak,Normal,65,None,0,1,Medium,Low,IMD
+78,2023,10,Goalpara,Matia,25.95,90.60,Krishnai,Normal,160,Low,4000,0,Low,Low,Local Authority
+79,2022,11,Morigaon,Mikirbheta,26.30,92.40,Kopili,Normal,75,None,0,0,Low,Low,ASDMA Report
+80,2021,12,Sivasagar,Demow,27.13,94.75,Desang,Normal,40,None,0,0,Low,Low,IMD
+81,2023,6,Dhemaji,Silapathar,27.65,95.00,Simen,Danger,540,Severe,70000,0,Low,High,Govt. Report
+82,2023,7,Cachar,Kalain,24.98,92.95,Jatinga,Warning,590,High,52000,4,High,High,News Article
+83,2022,8,Dima Hasao,Langting,25.45,93.10,Diyung,Warning,630,Medium,9000,9,High,High,ASDMA Report
+84,2022,9,Barpeta,Sarupeta,26.60,90.90,Nakhanda,Warning,450,Medium,30000,0,Low,Medium,Local Authority
+85,2021,5,Lakhimpur,Narayanpur,26.80,93.88,Pichala,Warning,400,Medium,25000,0,Low,Medium,Govt. Report
+86,2021,10,Karimganj,Dullabcherra,24.40,92.45,Singla,Normal,190,Low,5000,1,Medium,Low,News Article
+87,2023,4,Tinsukia,Doomdooma,27.57,95.57,Dibru,Above Normal,300,Low,10000,0,Low,Medium,IMD
+88,2023,11,Jorhat,Mariani,26.67,94.33,Tiru,Normal,60,None,0,0,Low,Low,ASDMA Report
+89,2022,1,Goalpara,Agia,26.05,90.65,Jiniram,Normal,40,None,0,0,Low,Low,IMD
+90,2022,3,Hailakandi,Mohanpur,24.75,92.70,Dhaleswari,Above Normal,120,Low,1500,1,High,Low,Local Authority
+91,2021,2,Dibrugarh,Chabua,27.48,95.18,Lohit,Normal,50,None,0,0,Low,Low,IMD
+92,2021,6,Nalbari,Ghograpar,26.45,91.40,Nona,Danger,510,Severe,65000,0,Low,High,Govt. Report
+93,2023,7,Baksa,Salbari Sub-Division,26.75,91.25,Manas,Warning,500,High,48000,0,Low,High,ASDMA Report
+94,2022,8,Udalguri,Harisinga,26.75,91.98,Dhansiri,Warning,490,High,39000,0,Low,High,News Article
+95,2021,9,Sonitpur,Balipara,26.80,92.75,Jiabharali,Warning,430,Medium,28000,0,Low,Medium,Local Authority
+96,2023,8,Biswanath,Biswanath Chariali,26.67,93.17,Burhigang,Warning,510,High,42000,0,Low,High,Govt. Report
+97,2022,7,Chirang,Basugaon,26.47,90.45,Champamati,Warning,470,Medium,29000,0,Low,Medium,ASDMA Report
+98,2021,6,Bongaigaon,Boitamari,26.25,90.55,Aie,Warning,480,High,34000,0,Low,High,News Article
+99,2023,5,Kokrajhar,Dotma,26.45,90.15,Sonkosh,Warning,370,Medium,19000,0,Low,Medium,Local Authority
+100,2022,9,Tinsukia,Margherita,27.28,95.68,Dihing,Warning,440,Medium,26000,0,Low,Medium,Govt. Report
+101,2021,8,Golaghat,Sarupathar,26.20,93.85,Dhansiri,Warning,500,High,37000,0,Low,High,ASDMA Report
+102,2023,12,Nagaon,Kampur,26.10,92.85,Kopili,Normal,30,None,0,0,Low,Low,IMD
+103,2022,2,Kamrup Rural,Rangia,26.47,91.63,Bornadi,Normal,58,None,0,0,Low,Low,Local Authority
+104,2021,1,Karimganj,Patharia Hills Area,24.65,92.15,None,NA,65,None,0,2,High,Low,Govt. Report
+105,2023,7,Dhemaji,Dhemaji Town,27.48,94.58,Brahmaputra,Danger,560,Severe,75000,0,Low,High,ASDMA Report
+106,2023,8,Cachar,Near Bhuban Hills,24.65,93.05,Barak Tributary,Warning,610,Medium,15000,7,High,High,News Article
+107,2022,6,Dima Hasao,Near Jatinga,25.10,92.95,Jatinga,Warning,670,Low,3000,15,High,High,Govt. Report
+108,2021,7,Barpeta,Mandia Area,26.20,91.05,Brahmaputra Channel,Danger,570,Severe,85000,0,Low,High,ASDMA Report
+109,2023,9,Lakhimpur,Chauldhowa Ghat,27.30,94.25,Brahmaputra,Warning,400,Medium,20000,0,Low,Medium,Local Authority
+110,2022,5,Hailakandi,Near Mizoram Border,24.35,92.60,Various Small Rivers,Warning,420,Medium,22000,5,High,Medium,ASDMA Report
+111,2021,8,Goalpara,Kharmuza Area,25.85,90.50,Jiniram,High,530,High,38000,2,Medium,High,News Article
+112,2023,6,Sivasagar,Near Nagaland Border Hills,26.75,94.85,Tributaries,Above Normal,450,Low,6000,3,Medium,Medium,Govt. Report
+113,2022,7,Jorhat,Kokilamukh (Near Majuli),26.95,94.35,Brahmaputra,Danger,550,Severe,60000,0,Low,High,ASDMA Report
+114,2021,9,Dibrugarh,Rohmaria (Erosion Prone),27.55,95.15,Brahmaputra,High,420,Medium,15000,0,Low,Medium,Local Authority
+115,2023,7,Kamrup Metropolitan,Basistha Temple Area,26.08,91.78,Basistha/Bahini,Warning,510,Medium,12000,2,Medium,Medium,News Article
+116,2022,8,Nalbari,Chamata,26.50,91.30,Burhadia,Danger,540,Severe,70000,0,Low,High,Govt. Report
+117,2021,7,Udalguri,Paneri Area,26.78,91.85,Kulsi,Warning,500,High,41000,0,Low,High,ASDMA Report
+118,2023,3,Tinsukia,Near Arunachal Border,27.70,95.90,Noa Dihing,Above Normal,150,Low,2500,1,Medium,Low,Local Authority
+119,2022,10,Cachar,Near Manipur Border Hills,24.80,93.15,Tributaries,Normal,200,Low,3500,2,High,Low,Govt. Report
+120,2021,11,Dhemaji,Lower Siang Area,27.70,95.10,Siang,Normal,85,None,0,0,Low,Low,IMD

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Assam Flood & Landslide AI Assistant</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive AI assistant for Assam flood and landslide data visualization and analysis">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1186/1186395.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS (for maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #116A7B;
+            --secondary-color: #0d566b;
+            --accent-color: #ECF8F9;
+            --danger-color: #CD1818;
+            --warning-color: #F79327;
+            --safe-color: #539165;
+            --text-color: #333;
+            --light-text: #f8f9fa;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            background-color: #f4f7f9;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-height: 100vh;
+        }
+        
+        /* Header Section */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            z-index: 10;
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-title img {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-help {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-help:hover {
+            background-color: #d5eaeb;
+        }
+        
+        /* Main Content Area */
+        .content-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Map Section */
+        .map-container {
+            flex: 3;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 999;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 25px;
+            right: 15px;
+            z-index: 999;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            min-width: 200px;
+        }
+        
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        /* Chat Section */
+        .chat-container {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+            z-index: 5;
+            min-width: 350px;
+            max-width: 450px;
+        }
+        
+        .chat-header {
+            background-color: var(--accent-color);
+            padding: 15px;
+            border-bottom: 1px solid #eaeaea;
+            font-weight: 500;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+        }
+        
+        #chatbox {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .user-message,
+        .bot-message {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .bot-message {
+            background-color: #f1f1f1;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #eaeaea;
+            background-color: #fff;
+        }
+        
+        #userInput {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 12px 15px;
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        #userInput:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(17, 106, 123, 0.2);
+        }
+        
+        #sendButton, #voiceButton {
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        #sendButton:hover, #voiceButton:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        #sendButton:disabled, #voiceButton:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        #voiceButton.recording {
+            background-color: var(--danger-color);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(205, 24, 24, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(205, 24, 24, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(205, 24, 24, 0);
+            }
+        }
+        
+        #loadingIndicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 5px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin: 0 2px;
+            opacity: 0.6;
+        }
+        
+        .typing-dot:nth-child(1) { animation: typingAnimation 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation: typingAnimation 1.4s 0.2s infinite; }
+        .typing-dot:nth-child(3) { animation: typingAnimation 1.4s 0.4s infinite; }
+        
+        @keyframes typingAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 90%;
+            box-shadow: var(--box-shadow);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-body h3 {
+            margin: 15px 0 10px;
+            color: var(--primary-color);
+        }
+        
+        .modal-body p {
+            margin-bottom: 10px;
+        }
+        
+        .example-query {
+            display: inline-block;
+            background-color: var(--accent-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 3px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .example-query:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Popup styling */
+        .leaflet-popup-content-wrapper {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .popup-content {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .popup-content b {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        /* Demo Warning Footer */
+        .demo-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-top: 1px solid #ffeeba;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+        
+        .demo-warning .warning-icon {
+            font-size: 1.2rem;
+            color: #f39c12;
+        }
+        
+        .dark-theme .demo-warning {
+            background-color: #382800;
+            color: #ffe69c;
+            border-color: #665800;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .content-container {
+                flex-direction: column;
+            }
+            
+            .map-container, .chat-container {
+                flex: none;
+                height: 50vh;
+                max-width: 100%;
+            }
+            
+            .header-title h1 {
+                font-size: 1.2rem;
+            }
+            
+            .demo-warning {
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .app-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .header-title img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .header-title h1 {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-title">
+                <img src="https://cdn-icons-png.flaticon.com/512/1186/1186395.png" alt="Flood Data Logo">
+                <h1>Assam Flood & Landslide AI Assistant</h1>
+            </div>
+            <div class="header-controls">
+                <button class="btn btn-help" id="helpButton">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help</span>
+                </button>
+                <button class="btn" id="toggleThemeButton">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="content-container">
+            <!-- Map Area -->
+            <div class="map-container">
+                <div id="map"></div>
+                
+                <!-- Map Controls -->
+                <div class="map-controls">
+                    <button class="btn" id="resetMapButton">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="btn" id="toggleFullscreenButton">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                
+                <!-- Map Legend -->
+                <div class="map-legend">
+                    <div class="legend-title">Map Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: darkred;"></div>
+                        <span>Severe Flooding</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: red;"></div>
+                        <span>High Flooding</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: orange;"></div>
+                        <span>Medium Flooding</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: gold;"></div>
+                        <span>Low Flooding</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: purple;"></div>
+                        <span>High Landslide Risk</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Interface Area -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <span>AI Assistant</span>
+                    <div class="chat-status">
+                        <div class="status-indicator"></div>
+                        <span>Online</span>
+                    </div>
+                </div>
+                
+                <!-- Message Display Box -->
+                <div id="chatbox">
+                    <!-- Initial message will be added by script.js -->
+                </div>
+                
+                <!-- User Input Area -->
+                <div class="input-area">
+                    <input type="text" id="userInput" placeholder="Type your question or use voice..." />
+                    <button id="voiceButton" title="Start Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="sendButton" title="Send Message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <div id="loadingIndicator" style="display: none;">
+                        <span>Thinking</span>
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">How to Use This Assistant</h2>
+                <button class="modal-close" id="closeModalButton">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This interactive tool provides access to historical flood and landslide data for Assam. You can ask questions using text or voice about floods, landslides, rainfall, and affected populations.</p>
+                
+                <h3>Try asking about:</h3>
+                <ul>
+                    <li>Flood severity in specific districts</li>
+                    <li>Landslide risks in mountainous areas</li>
+                    <li>Monthly rainfall patterns</li>
+                    <li>Affected populations in different regions</li>
+                    <li>Year-to-year comparisons</li>
+                </ul>
+                
+                <h3>Sample queries:</h3>
+                <div>
+                    <span class="example-query">Show severe floods in Barpeta during 2023</span>
+                    <span class="example-query">Where was the highest rainfall in July?</span>
+                    <span class="example-query">How many people were affected in Dhemaji?</span>
+                    <span class="example-query">Areas with high landslide risk in Dima Hasao</span>
+                    <span class="example-query">Compare floods in Jorhat and Dibrugarh</span>
+                </div>
+                
+                <h3>Map Legend:</h3>
+                <p>The map uses color-coded markers to represent flood severity and landslide risk:</p>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: darkred;"></div>
+                    <span>Severe Flooding</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: purple;"></div>
+                    <span>High Landslide Risk</span>
+                </div>
+                <p>Click on any marker to see detailed information about that location.</p>
+                
+                <h3>Voice Input:</h3>
+                <p>Click the microphone button to use voice commands. Speak clearly and the assistant will respond with both text and voice.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS (for maps) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <!-- PapaParse JS (for CSV parsing) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+    
+    <!-- Additional UI JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const helpModal = document.getElementById('helpModal');
+            const helpButton = document.getElementById('helpButton');
+            const closeModalButton = document.getElementById('closeModalButton');
+            
+            helpButton.addEventListener('click', function() {
+                helpModal.classList.add('active');
+            });
+            
+            closeModalButton.addEventListener('click', function() {
+                helpModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    helpModal.classList.remove('active');
+                }
+            });
+            
+            // Example query functionality
+            const exampleQueries = document.querySelectorAll('.example-query');
+            exampleQueries.forEach(query => {
+                query.addEventListener('click', function() {
+                    const userInput = document.getElementById('userInput');
+                    userInput.value = this.textContent;
+                    helpModal.classList.remove('active');
+                });
+            });
+            
+            // Theme toggle
+            const toggleThemeButton = document.getElementById('toggleThemeButton');
+            let darkMode = false;
+            
+            toggleThemeButton.addEventListener('click', function() {
+                darkMode = !darkMode;
+                
+                if (darkMode) {
+                    document.body.style.backgroundColor = '#1a1a1a';
+                    document.body.style.color = '#f8f9fa';
+                    document.querySelector('.chat-container').style.backgroundColor = '#2a2a2a';
+                    document.querySelector('.chat-container').style.boxShadow = '-4px 0 12px rgba(0, 0, 0, 0.3)';
+                    document.querySelector('.chat-header').style.backgroundColor = '#116A7B';
+                    document.querySelector('.chat-header').style.color = '#fff';
+                    document.querySelector('#userInput').style.backgroundColor = '#333';
+                    document.querySelector('#userInput').style.color = '#fff';
+                    document.querySelector('#userInput').style.borderColor = '#555';
+                    document.querySelector('.demo-warning').style.backgroundColor = '#382800';
+                    document.querySelector('.demo-warning').style.color = '#ffe69c';
+                    document.querySelector('.demo-warning').style.borderColor = '#665800';
+                    document.querySelectorAll('.bot-message').forEach(el => {
+                        el.style.backgroundColor = '#333';
+                        el.style.color = '#eee';
+                    });
+                    toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
+                    document.body.classList.add('dark-theme');
+                } else {
+                    document.body.style.backgroundColor = '#f4f7f9';
+                    document.body.style.color = '#333';
+                    document.querySelector('.chat-container').style.backgroundColor = '#fff';
+                    document.querySelector('.chat-container').style.boxShadow = '-4px 0 12px rgba(0, 0, 0, 0.1)';
+                    document.querySelector('.chat-header').style.backgroundColor = '#ECF8F9';
+                    document.querySelector('.chat-header').style.color = '#116A7B';
+                    document.querySelector('#userInput').style.backgroundColor = '#fff';
+                    document.querySelector('#userInput').style.color = '#333';
+                    document.querySelector('#userInput').style.borderColor = '#ddd';
+                    document.querySelector('.demo-warning').style.backgroundColor = '#fff3cd';
+                    document.querySelector('.demo-warning').style.color = '#856404';
+                    document.querySelector('.demo-warning').style.borderColor = '#ffeeba';
+                    document.querySelectorAll('.bot-message').forEach(el => {
+                        el.style.backgroundColor = '#f1f1f1';
+                        el.style.color = '#333';
+                    });
+                    toggleThemeButton.innerHTML = '<i class="fas fa-moon"></i>';
+                    document.body.classList.remove('dark-theme');
+                }
+            });
+            
+            // Reset map view
+            const resetMapButton = document.getElementById('resetMapButton');
+            resetMapButton.addEventListener('click', function() {
+                // Access the map from your script.js
+                if (window.map) {
+                    window.map.setView([26.2006, 92.9376], 7);
+                }
+            });
+            
+            // Fullscreen toggle
+            const toggleFullscreenButton = document.getElementById('toggleFullscreenButton');
+            let isFullscreen = false;
+            
+            toggleFullscreenButton.addEventListener('click', function() {
+                const mapContainer = document.querySelector('.map-container');
+                const chatContainer = document.querySelector('.chat-container');
+                
+                if (!isFullscreen) {
+                    mapContainer.style.flex = '5';
+                    chatContainer.style.flex = '1';
+                    toggleFullscreenButton.innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    mapContainer.style.flex = '3';
+                    chatContainer.style.flex = '2';
+                    toggleFullscreenButton.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+                
+                isFullscreen = !isFullscreen;
+                
+                // Trigger a map resize event to ensure the map adapts to new container size
+                if (window.map) {
+                    setTimeout(() => {
+                        window.map.invalidateSize();
+                    }, 300);
+                }
+            });
+            
+            // Enhance voice button visuals
+            const voiceButton = document.getElementById('voiceButton');
+            voiceButton.addEventListener('click', function() {
+                if (!isRecognizing) {
+                    voiceButton.classList.add('recording');
+                } else {
+                    voiceButton.classList.remove('recording');
+                }
+            });
+            
+            // Make sure to expose the map to the global window object in your script.js:
+            // window.map = map;
+            
+            // Add message timestamp functionality
+            const addMessageToChat = document.getElementById('chatbox').addMessageToChat;
+            if (typeof addMessageToChat === 'function') {
+                const originalAddMessageToChat = addMessageToChat;
+                
+                document.getElementById('chatbox').addMessageToChat = function(message, sender) {
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    originalAddMessageToChat(message, sender);
+                    
+                    // Add timestamp to the last message
+                    const messages = document.querySelectorAll('.user-message, .bot-message');
+                    const lastMessage = messages[messages.length - 1];
+                    
+                    const timeElement = document.createElement('div');
+                    timeElement.classList.add('message-time');
+                    timeElement.textContent = timeStr;
+                    lastMessage.appendChild(timeElement);
+                };
+            }
+        });
+    </script>
+</body>
+</html>
