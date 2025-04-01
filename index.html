@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
+    <!-- Custom CSS -->
     <style>
         :root {
             --primary-color: #116A7B;
@@ -51,7 +52,6 @@
             color: var(--text-color);
             background-color: #f4f7f9;
             line-height: 1.6;
-            overflow: hidden;
         }
         
         .app-container {
@@ -183,8 +183,7 @@
             height: 15px;
             border-radius: 50%;
         }
-        
-        /* Chat Section */
+
         .chat-container {
             flex: 2;
             display: flex;
@@ -498,6 +497,7 @@
                 flex: none;
                 height: 50vh;
                 max-width: 100%;
+                width: 100%;
             }
             
             .header-title h1 {
@@ -509,6 +509,31 @@
                 text-align: center;
                 gap: 5px;
                 padding: 10px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .content-container {
+                height: calc(100vh - 60px);
+            }
+            
+            .map-container {
+                height: 50%;
+            }
+            
+            .chat-container {
+                height: 50%;
+                min-width: 100%;
+                max-width: 100%;
+            }
+            
+            #chatbox {
+                overflow-y: auto;
             }
         }
         
@@ -534,138 +559,6 @@
             .modal-content {
                 width: 95%;
                 padding: 15px;
-            }
-        }
-
-        /* Improved Mobile Styles */
-        @media (max-width: 767px) {
-            /* Enable scrolling on the body */
-            html, body {
-                height: 100%;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                overflow-x: hidden;
-            }
-            
-            /* Make sure the app container can scroll */
-            .app-container {
-                height: auto;
-                min-height: 100%;
-                overflow-y: auto;
-            }
-            
-            /* Ensure input is always visible */
-            .input-area {
-                position: sticky;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: white;
-                padding: 10px;
-                z-index: 10;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            }
-            
-            /* Ensure proper sizing of containers */
-            .map-container {
-                height: 40vh !important;
-                min-height: 250px;
-                max-height: 50vh;
-                width: 100%;
-                flex: none;
-            }
-            
-            .chat-container {
-                height: auto !important;
-                min-height: 50vh;
-                width: 100%;
-                flex: none;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            #chatbox {
-                flex: 1;
-                min-height: 250px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 20px;
-            }
-            
-            /* Fix for iPhone notch and home indicator */
-            @supports (padding: max(0px)) {
-                .input-area {
-                    padding-bottom: max(10px, env(safe-area-inset-bottom));
-                }
-                
-                .demo-warning {
-                    padding-bottom: max(10px, env(safe-area-inset-bottom));
-                }
-            }
-            
-            /* Quick chips for common queries */
-            .quick-chips {
-                display: flex;
-                overflow-x: auto;
-                padding: 10px 5px;
-                background-color: #f8f8f8;
-                border-bottom: 1px solid #eee;
-                margin-bottom: 5px;
-                scrollbar-width: none; /* Hide scrollbar Firefox */
-                -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .quick-chips::-webkit-scrollbar {
-                display: none; /* Hide scrollbar Chrome/Safari/Opera */
-            }
-            
-            .chip {
-                flex: 0 0 auto;
-                padding: 8px 12px;
-                margin: 0 5px;
-                background-color: white;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                font-size: 0.8rem;
-                white-space: nowrap;
-                cursor: pointer;
-            }
-            
-            /* Mobile-specific button to scroll to bottom */
-            .scroll-bottom {
-                position: absolute;
-                bottom: 70px;
-                right: 15px;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                background-color: var(--primary-color);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                z-index: 5;
-                border: none;
-                display: none;
-            }
-            
-            /* Dark Theme Adjustments for Mobile */
-            .dark-theme .input-area {
-                background-color: #2a2a2a;
-            }
-            
-            .dark-theme .quick-chips {
-                background-color: #222;
-                border-color: #444;
-            }
-            
-            .dark-theme .chip {
-                background-color: #333;
-                border-color: #555;
-                color: #eee;
             }
         }
     </style>
@@ -739,19 +632,6 @@
                         <div class="status-indicator"></div>
                         <span>Online</span>
                     </div>
-
-                    <button class="scroll-bottom" id="scrollBottomBtn">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-
-                <!-- Add the quick chips here -->
-                <div class="quick-chips">
-                    <button class="chip">Severe floods</button>
-                    <button class="chip">Rainfall in July</button>
-                    <button class="chip">High landslide risk</button>
-                    <button class="chip">People affected</button>
-                    <button class="chip">Districts with floods</button>
                 </div>
                 
                 <!-- Message Display Box -->
@@ -937,12 +817,24 @@
                 const chatContainer = document.querySelector('.chat-container');
                 
                 if (!isFullscreen) {
-                    mapContainer.style.flex = '5';
-                    chatContainer.style.flex = '1';
+                    // Check if we're on mobile
+                    if (window.innerWidth <= 992) {
+                        mapContainer.style.height = '80%';
+                        chatContainer.style.height = '20%';
+                    } else {
+                        mapContainer.style.flex = '5';
+                        chatContainer.style.flex = '1';
+                    }
                     toggleFullscreenButton.innerHTML = '<i class="fas fa-compress"></i>';
                 } else {
-                    mapContainer.style.flex = '3';
-                    chatContainer.style.flex = '2';
+                    // Check if we're on mobile
+                    if (window.innerWidth <= 992) {
+                        mapContainer.style.height = '50%';
+                        chatContainer.style.height = '50%';
+                    } else {
+                        mapContainer.style.flex = '3';
+                        chatContainer.style.flex = '2';
+                    }
                     toggleFullscreenButton.innerHTML = '<i class="fas fa-expand"></i>';
                 }
                 
@@ -958,11 +850,16 @@
             
             // Enhance voice button visuals
             const voiceButton = document.getElementById('voiceButton');
+            let isRecognizing = false;
+            
             voiceButton.addEventListener('click', function() {
                 if (!isRecognizing) {
                     voiceButton.classList.add('recording');
+                    // Voice recognition code would go here
+                    isRecognizing = true;
                 } else {
                     voiceButton.classList.remove('recording');
+                    isRecognizing = false;
                 }
             });
             
@@ -970,98 +867,59 @@
             // window.map = map;
             
             // Add message timestamp functionality
-            const addMessageToChat = document.getElementById('chatbox').addMessageToChat;
-            if (typeof addMessageToChat === 'function') {
-                const originalAddMessageToChat = addMessageToChat;
-                
-                document.getElementById('chatbox').addMessageToChat = function(message, sender) {
-                    const now = new Date();
-                    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    
-                    originalAddMessageToChat(message, sender);
-                    
-                    // Add timestamp to the last message
-                    const messages = document.querySelectorAll('.user-message, .bot-message');
-                    const lastMessage = messages[messages.length - 1];
-                    
-                    const timeElement = document.createElement('div');
-                    timeElement.classList.add('message-time');
-                    timeElement.textContent = timeStr;
-                    lastMessage.appendChild(timeElement);
-                };
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Only run on mobile devices
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+            const chatbox = document.getElementById('chatbox');
             
-            if (isMobile) {
-                // Set up the quick chips functionality
-                const chips = document.querySelectorAll('.chip');
-                const userInput = document.getElementById('userInput');
+            // Simple function to add messages to chat
+            function addMessageToChat(message, sender) {
+                const messageEl = document.createElement('div');
+                messageEl.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+                messageEl.textContent = message;
                 
-                chips.forEach(chip => {
-                    chip.addEventListener('click', function() {
-                        userInput.value = this.textContent;
-                        userInput.focus();
-                    });
-                });
+                // Add timestamp
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
-                // Setup scroll to bottom button
-                const chatbox = document.getElementById('chatbox');
-                const scrollBottomBtn = document.getElementById('scrollBottomBtn');
+                const timeElement = document.createElement('div');
+                timeElement.classList.add('message-time');
+                timeElement.textContent = timeStr;
+                messageEl.appendChild(timeElement);
                 
-                if (chatbox && scrollBottomBtn) {
-                    // Show/hide based on scroll position
-                    chatbox.addEventListener('scroll', function() {
-                        if (chatbox.scrollHeight - chatbox.scrollTop > chatbox.clientHeight + 100) {
-                            scrollBottomBtn.style.display = 'flex';
-                        } else {
-                            scrollBottomBtn.style.display = 'none';
-                        }
-                    });
-                    
-                    // Scroll to bottom when clicked
-                    scrollBottomBtn.addEventListener('click', function() {
-                        chatbox.scrollTop = chatbox.scrollHeight;
-                    });
-                }
-                
-                // Make sure input is visible when focused
-                userInput.addEventListener('focus', function() {
-                    // Scroll to make sure input is visible
-                    setTimeout(function() {
-                        window.scrollTo(0, document.body.scrollHeight);
-                        document.querySelector('.input-area').scrollIntoView({ behavior: 'smooth' });
-                    }, 300);
-                });
-                
-                // Make sure chat messages are visible when added
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                            chatbox.scrollTop = chatbox.scrollHeight;
-                        }
-                    });
-                });
-                
-                observer.observe(chatbox, { childList: true });
-                
-                // Handle iOS keyboard issues
-                if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                    document.body.classList.add('ios-device');
-                    
-                    // Scroll to input when keyboard appears
-                    window.addEventListener('resize', function() {
-                        if (document.activeElement === userInput) {
-                            setTimeout(function() {
-                                userInput.scrollIntoView({ behavior: 'smooth' });
-                            }, 100);
-                        }
-                    });
-                }
+                chatbox.appendChild(messageEl);
+                chatbox.scrollTop = chatbox.scrollHeight;
             }
+            
+            // Add a welcome message (this would normally be in script.js)
+            if (chatbox.children.length === 0) {
+                addMessageToChat("Hello! I'm your Assam Flood & Landslide AI Assistant. How can I help you today?", 'bot');
+            }
+            
+            // Handle window resize for mobile layout
+            window.addEventListener('resize', function() {
+                const mapContainer = document.querySelector('.map-container');
+                const chatContainer = document.querySelector('.chat-container');
+                
+                // Reset any inline styles when transitioning between mobile and desktop
+                if (window.innerWidth > 992) {
+                    // Desktop layout
+                    mapContainer.style.height = '';
+                    chatContainer.style.height = '';
+                    mapContainer.style.flex = isFullscreen ? '5' : '3';
+                    chatContainer.style.flex = isFullscreen ? '1' : '2';
+                } else {
+                    // Mobile layout - ensure 50/50 split unless fullscreen is active
+                    if (!isFullscreen) {
+                        mapContainer.style.height = '50%';
+                        chatContainer.style.height = '50%';
+                    }
+                }
+                
+                // Ensure map resizes properly
+                if (window.map) {
+                    setTimeout(() => {
+                        window.map.invalidateSize();
+                    }, 300);
+                }
+            });
         });
     </script>
 </body>
