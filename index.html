@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Assam Flood & Landslide AI Assistant</title>
+    <title>COMPASS - Assam Flood & Landslide AI Assistant</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -561,6 +561,196 @@
                 padding: 15px;
             }
         }
+
+        /* Data Table Styles */
+        .data-table-container {
+            background-color: white;
+            border-top: 1px solid #eaeaea;
+            margin-top: auto;
+            max-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            transition: max-height 0.3s ease;
+        }
+
+        .data-table-header {
+            padding: 10px 15px;
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .data-table-header h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .btn-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .data-table-container.collapsed .btn-toggle {
+            transform: rotate(180deg);
+        }
+
+        .data-table-container.collapsed .data-table-content {
+            display: none;
+        }
+
+        .data-table-container.collapsed {
+            max-height: 40px;
+        }
+
+        .data-table-content {
+            padding: 15px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .data-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .data-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-download {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .btn-download:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-download:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 25vh;
+        }
+
+        #resultsTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        #resultsTable th,
+        #resultsTable td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        #resultsTable th {
+            background-color: #f5f5f5;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        #resultsTable tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #resultsTable tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        .no-data-message {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+            display: block;
+        }
+
+        /* Dark Theme Support */
+        .dark-theme .data-table-container {
+            background-color: #2a2a2a;
+            border-color: #444;
+        }
+
+        .dark-theme .data-table-header {
+            background-color: #116A7B;
+            color: #fff;
+        }
+
+        .dark-theme .btn-toggle {
+            color: #fff;
+        }
+
+        .dark-theme #resultsTable th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-theme #resultsTable td {
+            border-color: #444;
+        }
+
+        .dark-theme #resultsTable tr:nth-child(even) {
+            background-color: #3a3a3a;
+        }
+
+        .dark-theme #resultsTable tr:hover {
+            background-color: #444;
+        }
+
+        .dark-theme .no-data-message {
+            color: #aaa;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .data-table-container {
+                max-height: 30vh;
+            }
+            
+            .table-wrapper {
+                max-height: 20vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .data-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .data-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
     </style>
 </head>
 <body>
@@ -654,6 +844,44 @@
                             <div class="typing-dot"></div>
                             <div class="typing-dot"></div>
                             <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table Section -->
+                <div class="data-table-container">
+                    <div class="data-table-header" id="dataTableToggle">
+                        <h3>Data Results</h3>
+                        <button class="btn btn-toggle">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </div>
+                    <div class="data-table-content">
+                        <div class="data-controls">
+                            <span id="recordCount">0 records found</span>
+                            <div class="data-actions">
+                                <button class="btn btn-download" id="downloadCSV">
+                                    <i class="fas fa-file-csv"></i> Download CSV
+                                </button>
+                                <button class="btn btn-download" id="downloadPDF">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-wrapper">
+                            <table id="resultsTable">
+                                <thead>
+                                    <tr>
+                                        <!-- Headers will be dynamically inserted -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data rows will be dynamically inserted -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noDataMessage" class="no-data-message">
+                            No data available yet. Ask a question above to see results.
                         </div>
                     </div>
                 </div>
@@ -775,6 +1003,25 @@
                         el.style.backgroundColor = '#333';
                         el.style.color = '#eee';
                     });
+                    
+                    // Data table dark theme updates
+                    document.querySelector('.data-table-container').style.backgroundColor = '#2a2a2a';
+                    document.querySelector('.data-table-container').style.borderColor = '#444';
+                    document.querySelector('.data-table-header').style.backgroundColor = '#116A7B';
+                    document.querySelector('.data-table-header').style.color = '#fff';
+                    document.querySelector('.btn-toggle').style.color = '#fff';
+                    document.querySelectorAll('#resultsTable th').forEach(el => {
+                        el.style.backgroundColor = '#333';
+                        el.style.color = '#fff';
+                    });
+                    document.querySelectorAll('#resultsTable td').forEach(el => {
+                        el.style.borderColor = '#444';
+                    });
+                    document.querySelectorAll('#resultsTable tr:nth-child(even)').forEach(el => {
+                        el.style.backgroundColor = '#3a3a3a';
+                    });
+                    document.querySelector('#noDataMessage').style.color = '#aaa';
+                    
                     toggleThemeButton.innerHTML = '<i class="fas fa-sun"></i>';
                     document.body.classList.add('dark-theme');
                 } else {
@@ -794,6 +1041,25 @@
                         el.style.backgroundColor = '#f1f1f1';
                         el.style.color = '#333';
                     });
+                    
+                    // Data table light theme resets
+                    document.querySelector('.data-table-container').style.backgroundColor = '#fff';
+                    document.querySelector('.data-table-container').style.borderColor = '#eaeaea';
+                    document.querySelector('.data-table-header').style.backgroundColor = '#ECF8F9';
+                    document.querySelector('.data-table-header').style.color = '#116A7B';
+                    document.querySelector('.btn-toggle').style.color = '#116A7B';
+                    document.querySelectorAll('#resultsTable th').forEach(el => {
+                        el.style.backgroundColor = '#f5f5f5';
+                        el.style.color = '#333';
+                    });
+                    document.querySelectorAll('#resultsTable td').forEach(el => {
+                        el.style.borderColor = '#eee';
+                    });
+                    document.querySelectorAll('#resultsTable tr:nth-child(even)').forEach(el => {
+                        el.style.backgroundColor = '#f9f9f9';
+                    });
+                    document.querySelector('#noDataMessage').style.color = '#777';
+                    
                     toggleThemeButton.innerHTML = '<i class="fas fa-moon"></i>';
                     document.body.classList.remove('dark-theme');
                 }
