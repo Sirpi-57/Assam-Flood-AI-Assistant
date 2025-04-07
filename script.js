@@ -52,6 +52,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     voiceButton.addEventListener('click', toggleVoiceRecognition);
 
+    document.getElementById('dataTableToggle').addEventListener('click', toggleDataTable);
+    
+    document.getElementById('downloadCSV').addEventListener('click', function() {
+        // Generate a filename with current date
+        const date = new Date().toISOString().slice(0, 10);
+        exportTableToCSV(`assam_flood_data_${date}.csv`);
+    });
+    
+    document.getElementById('downloadPDF').addEventListener('click', function() {
+        // Generate a filename with current date
+        const date = new Date().toISOString().slice(0, 10);
+        exportTableToPDF(`assam_flood_data_${date}.pdf`);
+    });
+    
+    // Initialize data table as collapsed
+    document.querySelector('.data-table-container').classList.add('collapsed');
+
     // =========================================================================
     // Data Loading and Validation
     // =========================================================================
@@ -631,20 +648,24 @@ ${JSON.stringify(conversationHistory.slice(-4))}
 
     function displayDataOnMap(dataToDisplay) {
         markersLayer.clearLayers();
+        
+        // Update data table with the same data
+        displayDataInTable(dataToDisplay);
+        
         if (!dataToDisplay || dataToDisplay.length === 0) {
             console.log("No data to display on the map.");
             // Optional: Reset map view if nothing is displayed
             // map.setView([26.2006, 92.9376], 7);
             return;
         }
-
+    
         const bounds = L.latLngBounds();
         let displayedCount = 0;
-
+    
         dataToDisplay.forEach(item => {
             const lat = parseFloat(item.Latitude);
             const lon = parseFloat(item.Longitude);
-
+    
             if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                 const color = getMarkerColor(item);
                 const hasLandslide = parseInt(item.LandslideCount_Reported || 0) > 0;
@@ -652,7 +673,7 @@ ${JSON.stringify(conversationHistory.slice(-4))}
                     icon: createCustomIcon(color, hasLandslide),
                     title: `${item.LocationName || 'Location'}, ${item.District} (${item.Month}/${item.Year})`
                 });
-
+    
                 const popupContent = `
                     <div class="popup-content">
                         <b>${item.LocationName || 'N/A'}, ${item.District || 'N/A'}</b>
@@ -674,7 +695,7 @@ ${JSON.stringify(conversationHistory.slice(-4))}
                 console.warn("Invalid Lat/Lon for RecordID:", item.RecordID);
             }
         });
-
+    
         if (bounds.isValid()) {
             setTimeout(() => { map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 }); }, 100);
         } else if (displayedCount === 1) {
@@ -682,6 +703,192 @@ ${JSON.stringify(conversationHistory.slice(-4))}
             if (singlePoint) map.setView([parseFloat(singlePoint.Latitude), parseFloat(singlePoint.Longitude)], 10);
         }
         console.log(`Displayed ${displayedCount} markers.`);
+    }
+
+    function displayDataInTable(dataToDisplay) {
+        const tableHead = document.querySelector('#resultsTable thead tr');
+        const tableBody = document.querySelector('#resultsTable tbody');
+        const recordCountElement = document.getElementById('recordCount');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const downloadCSVBtn = document.getElementById('downloadCSV');
+        const downloadPDFBtn = document.getElementById('downloadPDF');
+        
+        // Clear existing table content
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+        
+        if (!dataToDisplay || dataToDisplay.length === 0) {
+            recordCountElement.textContent = '0 records found';
+            noDataMessage.style.display = 'block';
+            downloadCSVBtn.disabled = true;
+            downloadPDFBtn.disabled = true;
+            return;
+        }
+        
+        // Update record count
+        recordCountElement.textContent = `${dataToDisplay.length} records found`;
+        noDataMessage.style.display = 'none';
+        downloadCSVBtn.disabled = false;
+        downloadPDFBtn.disabled = false;
+        
+        // Set up the relevant columns we want to show (you can adjust this list)
+        const relevantColumns = [
+            'Year', 'Month', 'District', 'LocationName', 'MonthlyRainfall_mm', 
+            'FloodSeverity', 'AffectedPopulation_Est', 'LandslideCount_Reported',
+            'LandslideRisk', 'FloodRiskForecast'
+        ];
+        
+        // Create table headers
+        relevantColumns.forEach(column => {
+            const th = document.createElement('th');
+            // Format column name for display (e.g., MonthlyRainfall_mm -> Monthly Rainfall (mm))
+            const formattedName = column
+                .replace(/_/g, ' ')
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase());
+            th.textContent = formattedName;
+            tableHead.appendChild(th);
+        });
+        
+        // Create table rows
+        dataToDisplay.forEach(item => {
+            const row = document.createElement('tr');
+            
+            relevantColumns.forEach(column => {
+                const td = document.createElement('td');
+                
+                // Format values for better readability
+                if (column === 'Month') {
+                    // Convert month number to name
+                    const monthNames = ["January", "February", "March", "April", "May", "June", 
+                                        "July", "August", "September", "October", "November", "December"];
+                    const monthNumber = parseInt(item[column]);
+                    td.textContent = monthNumber >= 1 && monthNumber <= 12 ? 
+                                    monthNames[monthNumber - 1] : item[column];
+                } 
+                else if (column === 'AffectedPopulation_Est') {
+                    // Format large numbers with commas
+                    const population = parseInt(item[column]);
+                    td.textContent = !isNaN(population) ? population.toLocaleString() : item[column];
+                }
+                else if (column === 'MonthlyRainfall_mm') {
+                    // Add 'mm' suffix to rainfall values
+                    const rainfall = parseFloat(item[column]);
+                    td.textContent = !isNaN(rainfall) ? `${rainfall} mm` : item[column];
+                }
+                else {
+                    td.textContent = item[column] || 'N/A';
+                }
+                
+                // Add color coding for severity and risk levels
+                if (column === 'FloodSeverity') {
+                    td.style.color = getSeverityColor(item[column]);
+                    td.style.fontWeight = '600';
+                } else if (column === 'LandslideRisk' || column === 'FloodRiskForecast') {
+                    td.style.color = getRiskColor(item[column]);
+                    td.style.fontWeight = '600';
+                }
+                
+                row.appendChild(td);
+            });
+            
+            tableBody.appendChild(row);
+        });
+        
+        // Make the data table visible if collapsed
+        const dataTableContainer = document.querySelector('.data-table-container');
+        if (dataTableContainer.classList.contains('collapsed')) {
+            toggleDataTable();
+        }
+    }
+    
+    // Helper function to export table data to CSV
+    function exportTableToCSV(filename) {
+        const table = document.getElementById('resultsTable');
+        let csv = [];
+        const rows = table.querySelectorAll('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = [], cols = rows[i].querySelectorAll('td, th');
+            
+            for (let j = 0; j < cols.length; j++) {
+                // Remove any HTML and quote the text to handle commas
+                let text = cols[j].innerText.replace(/"/g, '""');
+                row.push(`"${text}"`);
+            }
+            
+            csv.push(row.join(','));
+        }
+        
+        // Download CSV file
+        downloadCSV(csv.join('\n'), filename);
+    }
+    
+    function downloadCSV(csv, filename) {
+        const csvFile = new Blob([csv], { type: 'text/csv' });
+        const downloadLink = document.createElement('a');
+        
+        // Create a link to download
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
+        
+        // Add to DOM, trigger click, and remove
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+    
+    // Helper function to export table data to PDF
+    function exportTableToPDF(filename) {
+        // Create a hidden iframe to generate PDF content
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.open();
+        
+        // Add basic styling for the PDF
+        iframeDoc.write(`
+            <html>
+            <head>
+                <title>${filename}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h2 { color: #116A7B; }
+                    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                    th { background-color: #f2f2f2; }
+                    .footer { margin-top: 20px; font-size: 12px; color: #777; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <h2>Assam Flood & Landslide Data Results</h2>
+                <div>Generated on: ${new Date().toLocaleString()}</div>
+                <table>${document.getElementById('resultsTable').outerHTML}</table>
+                <div class="footer">Generated by Assam Flood & Landslide AI Assistant</div>
+            </body>
+            </html>
+        `);
+        iframeDoc.close();
+        
+        // Use window.print() on the iframe
+        setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            
+            // Remove the iframe after printing
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }, 500);
+    }
+    
+    // Function to toggle data table visibility (expand/collapse)
+    function toggleDataTable() {
+        const dataTableContainer = document.querySelector('.data-table-container');
+        dataTableContainer.classList.toggle('collapsed');
     }
 
     // Popup color helpers
