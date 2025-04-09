@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- Configuration ---
     // !!! IMPORTANT: SECURITY WARNING - Use a backend proxy for production !!!
-    const GEMINI_API_KEY = 'AIzaSyB6onaQatjVBDRFAoX3Tr0OdX8Fx6oRpU4'; // <-- PASTE YOUR ACTUAL GEMINI API KEY HERE
-
+    const GEMINI_API_KEY = 'AIzaSyDu2JrQlvAfNIGjEvN9E0j6PNtS6fNsD8Q'; // <-- PASTE YOUR ACTUAL GEMINI API KEY HERE
+    // AIzaSyB6onaQatjVBDRFAoX3Tr0OdX8Fx6oRpU4
     // Ensure the model name is correct (e.g., gemini-1.5-pro-latest)
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${GEMINI_API_KEY}`;
 
